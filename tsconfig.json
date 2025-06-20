@@ -1,0 +1,12 @@
+{
+"compilerOptions": {
+    "sourceMap": true, // Generates source maps
+    "outDir": "./dist", // Ensures compiled files go to a specific directory
+    "target": "es2020",
+    "module": "commonjs",
+    "strict": true,
+     "typeRoots": ["./node_modules/@types", "./custom-types"] // Limit the scope of types
+  },
+  "include": ["*.ts", "4_Node_js_questions/*.ts"],
+  "exclude": ["node_modules"]
+}

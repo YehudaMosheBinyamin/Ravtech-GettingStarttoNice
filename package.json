@@ -19,5 +19,13 @@
   "homepage": "https://github.com/YehudaMosheBinyamin/Ravtech-GettingStarttoNice#readme",
   "dependencies": {
     "express": "^5.1.0"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.3",
+    "tsx": "^4.20.3"
   }
 }
