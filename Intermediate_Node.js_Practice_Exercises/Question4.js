@@ -1,4 +1,4 @@
-//This code has some issues
+//This code has some issues: need to fix why it doens't write to JSON file with the changes
 const rs = require("node:fs");
 if (process.argv.length == 4) {
   if (process.argv[2] === "add") {
