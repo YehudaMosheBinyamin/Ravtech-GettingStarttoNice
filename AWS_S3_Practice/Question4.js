@@ -1,19 +1,23 @@
-const obj = { name: "Yehuda" };
+//const obj = { name: "Yehuda" };
+const txt = "hello";
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { text } = require("stream/consumers");
 let obj_str;
 let response = "";
-let file_name = Date.now().toString() + ".txt";
+//let file_name = Date.now().toString() + ".txt";
+let file_name = "new_file_ravtech.txt";
 async function func() {
   try {
-    obj_str = JSON.stringify(obj);
+    //obj_str = JSON.stringify(obj);
     const s3 = new S3Client({});
     let command = new PutObjectCommand({
       Bucket: "ravtech-bucket-30",
       Key: file_name,
-      Body: JSON.stringify(obj),
+      //Body: JSON.stringify(obj),
+      Body: txt,
     });
     response = await s3.send(command);
+    console.log(JSON.stringify(response));
     if (!JSON.stringify(response).includes('"httpStatusCode":200')) {
       throw new Error("Error in sending file to AWS");
     } else {
