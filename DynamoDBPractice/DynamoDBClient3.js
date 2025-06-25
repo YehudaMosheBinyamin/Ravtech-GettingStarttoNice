@@ -48,6 +48,27 @@ async function findItem(id) {
     })
     .promise();
 }
+
+async function updateItem(id) {
+  console.log("Starting update item process....");
+  return await dynamoDB
+    .put({
+      TableName: "Table3",
+      Item: {
+        id: id,
+        name: "Elon Musk",
+      },
+    })
+    .promise();
+}
+//Heavily based funciton on ChatGPT
+async function deleteItem(id) {
+  const params = {
+    TableName: "Table3",
+    Key: { id: id },
+  };
+  return await dynamoDB.delete(params).promise();
+}
 app.get("/createtable/:id", async (req, res, next) => {
   try {
     console.log("Creating table...");
@@ -59,6 +80,15 @@ app.get("/createtable/:id", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+//Next function From ChatGPT, with slight changes and understanding
+app.delete("/deleteitem/:id", async (req, res) => {
+  let id;
+  if ("id" in req.params && req.params.id !== undefined) {
+    id = req.params.id;
+  }
+  await deleteItem(id).then((result) => res.send(result));
 });
 
 app.get("/getitem/:id", async (req, res, next) => {
@@ -81,10 +111,23 @@ app.get("/getitem/:id", async (req, res, next) => {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   console.log("Entered get");
-  listAvailableTables().then((result) =>
+  await listAvailableTables().then((result) =>
     res.send(JSON.parse(JSON.stringify(result)).TableNames)
+  );
+});
+
+app.put("/updateitem/:id", async (req, res) => {
+  console.log("Entered update item");
+  let id;
+  if ("id" in req.params && req.params.id !== undefined) {
+    id = req.params.id;
+  } else {
+    throw new Error("Missing id parameter for updating item");
+  }
+  await updateItem(id).then((result) =>
+    res.send(JSON.parse(JSON.stringify(result)))
   );
 });
 
@@ -113,3 +156,22 @@ app.listen(8000);
     "error": "No id found in the table. Try with an existing key"
 }
     */
+
+//http://localhost:8000/updateitem/123
+//Entered update item
+//Starting update item process....
+
+/**
+ * When error forced:
+ * {
+    "error": "Missing id parameter for updating item"
+}
+ */
+
+//http://localhost:8000/deleteitem/12369
+//(Successful delete) {}
+
+//(Forced error with same input)
+//{
+//   "error": "Problerm"
+//}
