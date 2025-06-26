@@ -1,0 +1,6 @@
+{
+  "TableName": "Authors",
+  "KeySchema": [{ "AttributeName": "authorId", "KeyType": "HASH" }],
+  "AttributeDefinitions": [{ "AttributeName": "authorId", "AttributeType": "S" }],
+  "BillingMode": "PAY_PER_REQUEST"
+}
