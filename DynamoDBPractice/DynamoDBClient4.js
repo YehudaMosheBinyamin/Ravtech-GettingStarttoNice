@@ -1,9 +1,111 @@
 const express = require("express");
 const app = express();
-
+/** 
+import {
+  DynamoDBClient,
+  ListTablesCommand,
+  CreateTableCommand,
+  PutItemCommand,
+  GetItemCommand,
+} from "@aws-sdk/client-dynamodb";
+ */
+const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 const AWS = require("aws-sdk");
 const { table } = require("console");
 const dynamoDB = new AWS.DynamoDB.DocumentClient({ region: "eu-north-1" });
+
+// Function to insert an item
+async function insertItem_v3(tableName, extraColumns = {}) {
+  console.log("Starting insert item process....");
+  const dynamoDBClient = new DynamoDBClient({ region: "eu-north-1" });
+  let obj = {
+    TableName: tableName,
+    Item: {},
+  };
+  console.log("extraColumns: " + extraColumns);
+  for (let key in extraColumns) {
+    if (key == "RegistrationDate") {
+      //For other types
+      obj.Item[key] = { N: `${extraColumns[key]}` };
+    } else {
+      obj.Item[key] = { S: `${extraColumns[key]}` };
+    }
+  }
+
+  console.log(JSON.stringify(obj));
+
+  const command = new PutItemCommand(obj);
+  return new Promise((resolve, reject) => {
+    dynamoDBClient.send(command, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+  //return await dynamoDB.send(command);
+}
+async function getUserBetweenDates() {
+  const params = {
+    TableName: "Users",
+    IndexName: "userId-RegistrationDate-index",
+    KeyConditionExpression:
+      "userId = :uid AND RegistrationDate BETWEEN :start AND :end",
+    ExpressionAttributeValues: {
+      ":uid": "12010",
+      ":start": 20230101,
+      ":end": 20231231,
+    },
+  };
+  return await dynamoDB.query(params).promise();
+}
+
+function getDateThirtyDaysAgo() {
+  return 1;
+}
+
+async function func() {
+  //EX_3 of indexes: Check length of time to run indexes
+  const start = Date.now();
+  let projectId = "30000";
+  for (let i = 0; i < 1; i++) {
+    /** 
+    let date = Date.now();
+    let status = "NonRunYet";
+    await insertItem_v3("Projects", {
+      projectId: projectId,
+      startDate: date,
+      status: status,
+    });
+    */
+    await insertItem_v3("Users", {
+      userId: projectId,
+      RegistrationDate: 20231010,
+      userId6: "7",
+    });
+    projectId++;
+  }
+}
+try {
+  let getDate30DaysAgo = getDateThirtyDaysAgo();
+  //func();
+  const start = Date.now();
+  getUserBetweenDates()
+    .then((res) => {
+      console.log(`${JSON.stringify(res)} Time: ${Date.now() - start}ms`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+} catch (errr) {
+  console.log(errr);
+}
+//LSI: {"Items":[{"userId6":"7","RegistrationDate":20231010,"userId":"12010"}],"Count":1,"ScannedCount":1} Time: 1588ms
+//GSI: {"Items":[{"userId6":"7","RegistrationDate":20231010,"userId":"12010"}],"Count":1,"ScannedCount":1} Time: 511ms
+
+//First way: Time: 348178ms
+//Second way after GSI: 337717ms
 async function insertItem(
   id,
   idName = "bookId",
