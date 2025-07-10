@@ -47,24 +47,52 @@ const stack2 = new Stack<string>();
 stack2.push("6"); 
 stack2.push("2"); 
 console.log(stack2.pop()); //2
-
+//ChatGPT
 function mergeObjects<U extends object,T extends object>(obj1: U , obj2:T ):U & T{
-  /**   let obj:Partial<U&T> = {...obj2};
-    for(let i of Object.keys(obj1) as (keyof U)[]){
-        (obj as U&T)[i] = obj1[i];
-    }
-    return obj as U&T;*/
-
-  const obj: Partial<U & T> = { ...obj2 };
-
-  for (const key of Object.keys(obj1) as Array<keyof U>) {
-    (obj as U & T)[key] = obj1[key];
-  }
-
-  return obj as U & T;
+ return { ...obj1, ...obj2 };
 }
 
 const obj1 = { name: "Alice" }; 
 const obj2 = { age: 25 }; 
 console.log(mergeObjects(obj1, obj2)); // { name: "Alice", age: 25 } 
 // mergeObjects(42, "test"); // שגיאה 
+
+abstract class Entity{
+    protected id:number;
+    constructor(id:number){
+        this.id = id;
+    }
+    abstract getDetails():string;
+}
+class User extends Entity{
+    name:string;
+    constructor(id:number,name:string){
+        super(id);
+        this.name = name;
+    }
+    getDetails():string{
+        return `User: ${this.name},ID: ${this.id}`;
+    }
+}
+
+class Product extends Entity{
+    price:number;
+    constructor(id:number, price:number){
+        super(id);
+        this.price = price;
+    }
+    getDetails():string{
+        return `Product price: ${this.price},ID: ${this.id}`;
+    }
+}
+
+function processEntity<T extends Entity>(one:T){
+    return one.getDetails();
+}
+
+const user = new User(1, "Alice"); 
+const product = new Product(2, 99.99); 
+console.log(processEntity(user));    
+console.log(processEntity(product)); 
+//User: Alice,ID: 1
+//Product price: 99.99,ID: 2
