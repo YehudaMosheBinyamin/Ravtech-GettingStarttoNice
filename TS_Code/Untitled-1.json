@@ -1,0 +1,9 @@
+{"projectId":{"S":"3"},"ActivitiesId":{"S":"2"},
+"activitiesList":{"S":"[{\"activityName\":\"VS Code\",
+\"EstimatedTime\":\"00:00:10\",\"Resources\":\"5RAM\"},
+{\"activityName\":\"JS Playground\",\"EstimatedTime\":\"00:00:05\",\"Resources\":\"5RAM\"}]"}
+,"status":{"S":"NoneRunYet"}},
+{"projectId":{"S":"35"},"ActivitiesId":{"S":"42"},"activitiesList":
+{"S":"[{\"activityName\":\"act123\",\"EstimatedTime\":\"00:00:10\",\"Resources\":\"5RAM\"},
+{\"activityName\":\"act678\",\"EstimatedTime\":\"00:00:05\",\"Resources\":\"5RAM\"}]"}
+,"status":{"S":"NoneRunYet"}}],"ScannedCount":2}
