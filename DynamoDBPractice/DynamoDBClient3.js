@@ -91,6 +91,7 @@ app.delete("/deleteitem/:id", async (req, res) => {
   await deleteItem(id).then((result) => res.send(result));
 });
 
+//API to get item
 app.get("/getitem/:id", async (req, res, next) => {
   try {
     console.log("Getting item...");
